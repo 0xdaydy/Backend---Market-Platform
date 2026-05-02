@@ -41,6 +41,7 @@ class StoreTransactionAction
             $farmer = Farmer::findOrFail($data['farmer_id']);
 
             // Credit limit check for credit transactions
+            $netDue = null;
             if ($data['payment_method'] === 'credit') {
                 $interestRate = (float) config('market.interest_rate', 0);
                 $totalDue = round($totalAmount * (1 + $interestRate), 2);
@@ -49,7 +50,7 @@ class StoreTransactionAction
                 $surplus = max(0, -$farmer->credit_balance_fcfa);
                 $netDue = max(0, round($totalDue - $surplus, 2));
 
-                if (! CreditLimitChecker::check($farmer, $netDue)) {
+                if ($netDue > 0 && ! CreditLimitChecker::check($farmer, $netDue)) {
                     throw ValidationException::withMessages([
                         'credit_limit' => [
                             sprintf(
@@ -84,9 +85,9 @@ class StoreTransactionAction
             }
 
             // Create debt record for credit transactions
-            if ($data['payment_method'] === 'credit') {
+            if ($data['payment_method'] === 'credit' && $netDue > 0) {
                 $interestRate = (float) config('market.interest_rate', 0);
-                TransactionEngine::processCreditTransaction($transaction, $interestRate);
+                TransactionEngine::processCreditTransaction($transaction, $interestRate, $netDue);
             }
 
             return $transaction->load('items.product');

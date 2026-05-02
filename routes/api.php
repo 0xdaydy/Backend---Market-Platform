@@ -23,9 +23,12 @@ use App\Features\Farmers\Actions\UpdateFarmerAction;
 use App\Features\Repayments\Actions\IndexRepaymentAction;
 use App\Features\Repayments\Actions\ShowRepaymentAction;
 use App\Features\Repayments\Actions\StoreRepaymentAction;
+use App\Features\Settings\Actions\IndexSettingAction;
+use App\Features\Settings\Actions\UpdateSettingAction;
 use App\Features\Transactions\Actions\IndexTransactionAction;
 use App\Features\Transactions\Actions\ShowTransactionAction;
 use App\Features\Transactions\Actions\StoreTransactionAction;
+use App\Features\Transactions\Actions\ValidateTransactionAction;
 use App\Features\Users\Actions\DestroyUserAction;
 use App\Features\Users\Actions\IndexUserAction;
 use App\Features\Users\Actions\ShowUserAction;
@@ -69,9 +72,13 @@ Route::prefix('v1')->group(function () {
         Route::get('/transactions', IndexTransactionAction::class);
         Route::get('/transactions/{transaction}', ShowTransactionAction::class);
         Route::post('/transactions', StoreTransactionAction::class);
+        Route::post('/transactions/validate', ValidateTransactionAction::class);
 
         Route::get('/repayments', IndexRepaymentAction::class);
         Route::get('/repayments/{repayment}', ShowRepaymentAction::class);
         Route::post('/repayments', StoreRepaymentAction::class);
+
+        Route::get('/settings', IndexSettingAction::class);
+        Route::patch('/settings', UpdateSettingAction::class);
     });
 });

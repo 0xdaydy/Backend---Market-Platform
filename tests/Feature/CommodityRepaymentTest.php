@@ -144,8 +144,8 @@ class CommodityRepaymentTest extends TestCase
         $response->assertCreated();
 
         $farmer->refresh();
-        // Surplus consumed: 5000 - 6000 = -1000 (new debt of 1000)
-        $this->assertEquals(1000, $farmer->credit_balance_fcfa);
+        // Surplus consumed: 5000 - 6300 = -1300 (new debt of 1300 with 5% interest)
+        $this->assertEquals(1300, $farmer->credit_balance_fcfa);
     }
 
     public function test_credit_surplus_covers_full_transaction(): void

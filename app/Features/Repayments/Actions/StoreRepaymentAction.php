@@ -44,13 +44,6 @@ class StoreRepaymentAction
 
             $result = RepaymentAllocator::allocate($repayment);
 
-            // Store any remaining as credit_balance_fcfa reduction
-            if ($result['remaining'] > 0) {
-                $farmer = Farmer::find($data['farmer_id']);
-                $farmer->credit_balance_fcfa = max(0, round($farmer->credit_balance_fcfa - $result['remaining'], 2));
-                $farmer->save();
-            }
-
             return $repayment->load(['debts']);
         });
 

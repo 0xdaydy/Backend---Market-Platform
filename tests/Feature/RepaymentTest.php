@@ -229,7 +229,8 @@ class RepaymentTest extends TestCase
         $this->assertEquals(0, $debt->balance);
 
         $farmer->refresh();
-        $this->assertEquals(0, $farmer->credit_balance_fcfa);
+        // Excess 3000 stored as credit surplus (negative balance)
+        $this->assertEquals(-3000, $farmer->credit_balance_fcfa);
     }
 
     public function test_repayment_creates_immutable_audit_trail(): void

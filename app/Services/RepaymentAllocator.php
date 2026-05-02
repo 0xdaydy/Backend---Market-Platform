@@ -54,7 +54,7 @@ class RepaymentAllocator
 
         // Update farmer credit balance
         $farmer = Farmer::find($repayment->farmer_id);
-        $farmer->credit_balance_fcfa = max(0, round($farmer->credit_balance_fcfa - $repayment->amount + $remaining, 2));
+        $farmer->credit_balance_fcfa = round($farmer->credit_balance_fcfa - $repayment->amount, 2);
         $farmer->save();
 
         return [
