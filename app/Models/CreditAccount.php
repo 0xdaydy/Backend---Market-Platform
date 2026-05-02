@@ -31,15 +31,17 @@ class CreditAccount
         return $this->availableCredit() >= $amount;
     }
 
-    public function charge(float $amount): void
+    public function charge(float $amount): float
     {
-        $this->farmer->credit_balance_fcfa = round($this->balance() + $amount, 2);
-        $this->farmer->save();
+        $newBalance = round($this->balance() + $amount, 2);
+
+        return $newBalance;
     }
 
-    public function repay(float $amount): void
+    public function repay(float $amount): float
     {
-        $this->farmer->credit_balance_fcfa = round($this->balance() - $amount, 2);
-        $this->farmer->save();
+        $newBalance = round($this->balance() - $amount, 2);
+
+        return $newBalance;
     }
 }

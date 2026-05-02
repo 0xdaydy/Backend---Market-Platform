@@ -25,33 +25,26 @@ class StoreTransactionAction
             $items = $pricing['priced_items'];
 
             $farmer = Farmer::findOrFail($data['farmer_id']);
+            $creditPreview = null;
 
-            // Credit limit check for credit transactions
-            $netDue = null;
             if ($data['payment_method'] === 'credit') {
                 $interestRate = (float) config('market.interest_rate', 0);
-                $totalDue = round($totalAmount * (1 + $interestRate), 2);
-
                 $creditAccount = $farmer->creditAccount();
                 $surplus = $creditAccount->surplus();
-                $netDue = max(0, round($totalDue - $surplus, 2));
 
-                if ($netDue > 0 && ! $creditAccount->canCharge($netDue)) {
+                // Compute credit values without persisting — single source of truth
+                $creditPreview = TransactionEngine::preview($totalAmount, $surplus, $interestRate);
+
+                if ($creditPreview['net_due'] > 0 && ! $creditAccount->canCharge($creditPreview['net_due'])) {
                     throw ValidationException::withMessages([
                         'credit_limit' => [
                             sprintf(
                                 'Credit limit exceeded. Available: %s, Required: %s',
                                 $creditAccount->availableCredit(),
-                                $netDue
+                                $creditPreview['net_due']
                             ),
                         ],
                     ]);
-                }
-
-                // Consume surplus
-                if ($surplus > 0) {
-                    $consumed = min($surplus, $totalDue);
-                    $creditAccount->charge($consumed);
                 }
             }
 
@@ -69,10 +62,13 @@ class StoreTransactionAction
                 TransactionItem::create($item);
             }
 
-            // Create debt record for credit transactions
-            if ($data['payment_method'] === 'credit' && $netDue > 0) {
-                $interestRate = (float) config('market.interest_rate', 0);
-                TransactionEngine::processCreditTransaction($transaction, $interestRate, $netDue);
+            // Delegate all credit math to the engine: surplus consumption, balance update, debt creation
+            if ($data['payment_method'] === 'credit' && $creditPreview !== null) {
+                TransactionEngine::processCreditTransaction(
+                    $farmer, $transaction, $totalAmount,
+                    $farmer->creditAccount()->surplus(),
+                    $creditPreview['interest_rate'],
+                );
             }
 
             return $transaction->load('items.product');

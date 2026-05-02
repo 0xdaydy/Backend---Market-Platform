@@ -52,7 +52,9 @@ class RepaymentAllocator
         }
 
         // Update farmer credit balance
-        $repayment->farmer->creditAccount()->repay($repayment->amount);
+        $farmer = $repayment->farmer;
+        $farmer->credit_balance_fcfa = $farmer->creditAccount()->repay($repayment->amount);
+        $farmer->save();
 
         return [
             'allocated' => $allocations,
