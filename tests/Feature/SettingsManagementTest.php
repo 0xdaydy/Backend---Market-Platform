@@ -12,11 +12,6 @@ class SettingsManagementTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function actingAsUser(User $user): string
-    {
-        return $user->createToken('test-device')->plainTextToken;
-    }
-
     public function test_can_list_settings(): void
     {
         $admin = User::factory()->create(['role' => UserRole::Admin]);

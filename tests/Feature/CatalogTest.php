@@ -13,11 +13,6 @@ class CatalogTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function actingAsUser(User $user): string
-    {
-        return $user->createToken('test-device')->plainTextToken;
-    }
-
     // =================== CATEGORY TREE ===================
 
     public function test_can_list_categories_as_nested_tree(): void

@@ -17,11 +17,6 @@ class CommodityRepaymentTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function actingAsUser(User $user): string
-    {
-        return $user->createToken('test-device')->plainTextToken;
-    }
-
     public function test_can_repay_with_commodity_conversion(): void
     {
         $operator = User::factory()->create(['role' => UserRole::Operator]);

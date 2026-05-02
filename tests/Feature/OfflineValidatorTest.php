@@ -13,11 +13,6 @@ class OfflineValidatorTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function actingAsUser(User $user): string
-    {
-        return $user->createToken('test-device')->plainTextToken;
-    }
-
     public function test_valid_offline_transaction_passes_validation(): void
     {
         $operator = User::factory()->create(['role' => UserRole::Operator]);

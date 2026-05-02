@@ -15,11 +15,6 @@ class RepaymentTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function actingAsUser(User $user): string
-    {
-        return $user->createToken('test-device')->plainTextToken;
-    }
-
     public function test_full_repayment_closes_single_debt(): void
     {
         $operator = User::factory()->create(['role' => UserRole::Operator]);

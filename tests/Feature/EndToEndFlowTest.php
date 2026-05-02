@@ -16,11 +16,6 @@ class EndToEndFlowTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function actingAsUser(User $user): string
-    {
-        return $user->createToken('test-device')->plainTextToken;
-    }
-
     public function test_complete_market_flow(): void
     {
         // 1. Setup: Admin creates supervisor and operator

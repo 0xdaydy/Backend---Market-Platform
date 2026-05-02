@@ -12,11 +12,6 @@ class UserManagementTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function actingAsUser(User $user): string
-    {
-        return $user->createToken('test-device')->plainTextToken;
-    }
-
     // =================== INDEX ===================
 
     public function test_admin_can_list_all_users(): void

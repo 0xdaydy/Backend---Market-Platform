@@ -206,17 +206,22 @@ curl -X POST http://localhost:8080/api/v1/transactions/validate \
 
 ## Architecture
 
-### Deep Modules
+### Module Depth
 
-- **TransactionEngine**: Handles credit transaction processing, interest calculation, and debt creation
-- **CreditLimitChecker**: Enforces credit limits with surplus awareness
-- **RepaymentAllocator**: FIFO debt allocation with partial repayment support
-- **OfflinePreValidator**: Server-side re-validation for offline transactions
+| Module | Depth | Description |
+|--------|-------|-------------|
+| **CreditAccount** | Deep | Encapsulates all credit balance/limit/surplus logic. Callers use `$farmer->creditAccount()->charge($amount)` |
+| **TransactionEngine** | Medium | Creates debt records for credit transactions; delegates balance updates to CreditAccount |
+| **RepaymentAllocator** | Medium | FIFO debt allocation with partial repayment support; delegates balance updates to CreditAccount |
+| **TransactionPricing** | Medium | Item pricing calculation and price-change detection shared by online and offline paths |
+| **OfflinePreValidator** | Medium | Server-side re-validation for offline transactions; uses TransactionPricing + CreditAccount |
+| **CatalogController** | Shallow | Pure CRUD passthrough; acceptable for resource controllers |
+| **FarmerController** | Shallow | Pure CRUD passthrough; acceptable for resource controllers |
 
 ### Key Models
 
 - **User**: Authenticatable with role enum and supervisor self-reference
-- **Farmer**: Credit tracking with `credit_limit` and `credit_balance_fcfa`
+- **Farmer**: Credit tracking with `credit_limit` and `credit_balance_fcfa` (mutate through `CreditAccount` only)
 - **Transaction**: Immutable records with snapshot pricing via `TransactionItem`
 - **Debt**: 1:1 with credit transactions, tracks principal, interest, balance, status
 - **Repayment**: Allocated across debts via FIFO through `DebtRepayment` pivot
@@ -247,7 +252,7 @@ docker compose run --rm app php artisan test --coverage
 
 - **AuthTest**: Login/logout, token management, RBAC gates
 - **UserManagementTest**: CRUD, role filtering, policy enforcement
-- **FarmerManagementTest**: CRUD, search, credit fields
+- **FarmerManagementTest**: CRUD, search, credit fields, debts summary
 - **CatalogTest**: Categories, products, nested tree, admin mutations
 - **TransactionTest**: Cash transactions, snapshot pricing, references
 - **CreditTransactionTest**: Interest calculation, limit enforcement
@@ -256,6 +261,8 @@ docker compose run --rm app php artisan test --coverage
 - **OfflineValidatorTest**: Server-side re-validation
 - **SettingsManagementTest**: Admin-only settings CRUD
 - **EndToEndFlowTest**: Complete market flow integration
+- **CreditAccountTest** (Unit): CreditAccount value object invariants (9 read-only tests)
+- **CreditAccountMutationTest** (Feature): CreditAccount charge/repay persistence (3 tests)
 
 ## Docker Services
 
@@ -308,10 +315,12 @@ docker compose run --rm app php artisan openapi:export
 ### Code Style
 
 The project follows Laravel conventions:
-- Single-action controllers (`__invoke`) for endpoints
+- **Resource controllers** for pure CRUD features (Catalog, Farmers, Users, Settings) — multi-method controllers under `app/Features/{Feature}/`
+- **Single-action classes** (`__invoke`) for complex operations (StoreTransaction, StoreRepayment, ValidateTransaction, Auth)
 - Feature-based folder structure under `app/Features/`
 - Form Request validation classes
-- Service classes for business logic
+- Domain modules (e.g. `CreditAccount`) encapsulate business rules with a small public interface
+- Service classes for shared business logic (TransactionPricing, TransactionEngine, RepaymentAllocator)
 - Native Gates and Policies for authorization
 
 ## License

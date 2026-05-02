@@ -12,11 +12,6 @@ class FarmerManagementTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function actingAsUser(User $user): string
-    {
-        return $user->createToken('test-device')->plainTextToken;
-    }
-
     // =================== INDEX ===================
 
     public function test_can_list_farmers(): void

@@ -14,11 +14,6 @@ class CreditTransactionTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function actingAsUser(User $user): string
-    {
-        return $user->createToken('test-device')->plainTextToken;
-    }
-
     public function test_can_create_credit_transaction_with_interest(): void
     {
         $operator = User::factory()->create(['role' => UserRole::Operator]);

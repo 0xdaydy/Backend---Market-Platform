@@ -20,4 +20,9 @@ class Farmer extends Model
             'credit_balance_fcfa' => 'decimal:2',
         ];
     }
+
+    public function creditAccount(): CreditAccount
+    {
+        return new CreditAccount($this);
+    }
 }

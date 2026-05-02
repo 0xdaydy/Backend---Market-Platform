@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Features\Repayments\Actions;
+namespace App\Features\Repayments;
 
 use App\Models\Repayment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class IndexRepaymentAction
+class RepaymentController
 {
-    public function __invoke(Request $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $query = Repayment::query()->with('farmer', 'operator');
 
@@ -21,5 +21,10 @@ class IndexRepaymentAction
         }
 
         return response()->json($query->paginate($request->input('per_page', 15)));
+    }
+
+    public function show(Repayment $repayment): JsonResponse
+    {
+        return response()->json($repayment->load('debts', 'farmer', 'operator'));
     }
 }

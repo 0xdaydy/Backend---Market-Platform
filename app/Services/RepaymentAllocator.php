@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Debt;
 use App\Models\DebtRepayment;
-use App\Models\Farmer;
 use App\Models\Repayment;
 use Illuminate\Support\Facades\DB;
 
@@ -53,9 +52,7 @@ class RepaymentAllocator
         }
 
         // Update farmer credit balance
-        $farmer = Farmer::find($repayment->farmer_id);
-        $farmer->credit_balance_fcfa = round($farmer->credit_balance_fcfa - $repayment->amount, 2);
-        $farmer->save();
+        $repayment->farmer->creditAccount()->repay($repayment->amount);
 
         return [
             'allocated' => $allocations,

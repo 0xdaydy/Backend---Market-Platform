@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Debt;
-use App\Models\Farmer;
 use App\Models\Transaction;
 
 class TransactionEngine
@@ -34,9 +33,7 @@ class TransactionEngine
         ]);
 
         // Update farmer credit balance
-        $farmer = Farmer::find($transaction->farmer_id);
-        $farmer->credit_balance_fcfa = round($farmer->credit_balance_fcfa + $amountToAdd, 2);
-        $farmer->save();
+        $transaction->farmer->creditAccount()->charge($amountToAdd);
 
         return $debt;
     }

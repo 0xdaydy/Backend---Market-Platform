@@ -1,14 +1,23 @@
 <?php
 
-namespace App\Features\Settings\Actions;
+namespace App\Features\Settings;
 
 use App\Features\Settings\Requests\UpdateSettingRequest;
 use App\Models\Setting;
 use Illuminate\Http\JsonResponse;
 
-class UpdateSettingAction
+class SettingController
 {
-    public function __invoke(UpdateSettingRequest $request): JsonResponse
+    public function index(): JsonResponse
+    {
+        $settings = Setting::all()->mapWithKeys(function (Setting $setting) {
+            return [$setting->key => $setting->value];
+        });
+
+        return response()->json($settings);
+    }
+
+    public function update(UpdateSettingRequest $request): JsonResponse
     {
         $data = $request->validated();
 

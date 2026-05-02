@@ -14,11 +14,6 @@ class TransactionTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function actingAsUser(User $user): string
-    {
-        return $user->createToken('test-device')->plainTextToken;
-    }
-
     public function test_can_create_cash_transaction_with_snapshot_pricing(): void
     {
         $operator = User::factory()->create(['role' => UserRole::Operator]);

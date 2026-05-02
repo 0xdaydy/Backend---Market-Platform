@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Features\Transactions\Actions;
+namespace App\Features\Transactions;
 
 use App\Models\Transaction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class IndexTransactionAction
+class TransactionController
 {
-    public function __invoke(Request $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $query = Transaction::query()->with('farmer', 'operator');
 
@@ -25,5 +25,10 @@ class IndexTransactionAction
         }
 
         return response()->json($query->paginate($request->input('per_page', 15)));
+    }
+
+    public function show(Transaction $transaction): JsonResponse
+    {
+        return response()->json($transaction->load('items.product', 'farmer', 'operator'));
     }
 }
