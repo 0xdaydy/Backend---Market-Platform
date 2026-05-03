@@ -271,7 +271,8 @@ curl -X POST http://localhost:8080/api/v1/transactions/validate \
 - Excess repayments stored as credit surplus
 - Debt statuses: `open` → `partially_paid` → `closed`
 
-## Testing
+---
+### Backend
 
 ```bash
 # Run all tests
@@ -353,16 +354,3 @@ docker compose run --rm app php artisan openapi:export
 ```
 
 ### Code Style
-
-The project follows Laravel conventions:
-- **Resource controllers** for pure CRUD features (Catalog, Farmers, Users, Settings) — multi-method controllers under `app/Features/{Feature}/`
-- **Single-action classes** (`__invoke`) for complex operations (StoreTransaction, StoreRepayment, ValidateTransaction, Auth)
-- Feature-based folder structure under `app/Features/`
-- Form Request validation classes
-- Domain modules (e.g. `CreditAccount`) encapsulate business rules with a small public interface
-- Service classes for shared business logic (TransactionPricing, TransactionEngine, RepaymentAllocator)
-- Native Gates and Policies for authorization
-
-## License
-
-MIT
