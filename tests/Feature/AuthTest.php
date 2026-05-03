@@ -50,12 +50,30 @@ class AuthTest extends TestCase
             ->assertJsonValidationErrors(['email']);
     }
 
-    public function test_login_requires_email_password_and_device_name(): void
+    public function test_login_requires_email_and_password(): void
     {
         $response = $this->postJson('/api/v1/auth/login', []);
 
         $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['email', 'password', 'device_name']);
+            ->assertJsonValidationErrors(['email', 'password']);
+    }
+
+    public function test_login_without_device_name_uses_default(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'operator@example.com',
+            'password' => Hash::make('password'),
+            'role' => UserRole::Operator,
+        ]);
+
+        $response = $this->postJson('/api/v1/auth/login', [
+            'email' => 'operator@example.com',
+            'password' => 'password',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonStructure(['token', 'user'])
+            ->assertJsonPath('user.email', 'operator@example.com');
     }
 
     public function test_logout_revokes_token(): void

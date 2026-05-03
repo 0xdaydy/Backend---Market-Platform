@@ -14,7 +14,8 @@ use App\Features\Users\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
-    Route::post('/auth/login', LoginAction::class);
+    Route::post('/auth/login', LoginAction::class)
+        ->middleware('throttle:5,1');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/auth/logout', LogoutAction::class);

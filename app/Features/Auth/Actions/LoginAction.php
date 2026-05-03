@@ -20,7 +20,8 @@ class LoginAction
             ]);
         }
 
-        $token = $user->createToken($request->device_name)->plainTextToken;
+        $deviceName = $request->device_name ?? 'api';
+        $token = $user->createToken($deviceName)->plainTextToken;
 
         return response()->json([
             'token' => $token,

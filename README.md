@@ -62,6 +62,8 @@ docker compose run --rm app php artisan migrate:fresh --seed --seeder=DemoSeeder
 
 6. The API will be available at `http://localhost:8080`
 
+7. Open the interactive API docs at `http://localhost:8080/docs/api`
+
 ### Demo Credentials
 
 After running the demo seeder:
@@ -69,18 +71,52 @@ After running the demo seeder:
 - **Supervisor**: `supervisor@market.local` / `password`
 - **Operator**: `operator@market.local` / `password`
 
+### Operator Test Seeder
+
+A standalone seeder for testing operator login flows across web and mobile platforms:
+
+```bash
+docker compose run --rm app php artisan db:seed --class=OperatorTestSeeder
+```
+
+| Role | Email | Password |
+|------|-------|----------|
+| Supervisor | `test-supervisor@market.local` | `password` |
+| Operator | `test-operator@market.local` | `password` |
+
+The seeder creates an operator under a supervisor and pre-generates Sanctum tokens for `web` and `mobile` device names. Tokens are printed to the console for use in manual testing. See [tests/Feature/OperatorTestSeederTest.php](tests/Feature/OperatorTestSeederTest.php) for automated coverage.
+
 ## API Documentation
 
-### Interactive Docs (Scramble)
-Visit `http://localhost:8080/docs/api` for interactive Swagger UI documentation.
+### Interactive Docs (Scramble — Stoplight Elements)
+Visit [http://localhost:8080/docs/api](http://localhost:8080/docs/api) for interactive Swagger-style API documentation. You can test every endpoint directly from the browser — click **Try it out** on any endpoint, fill in the parameters, and see real responses.
 
-### OpenAPI Spec Export
+> If the page appears blank, check the browser console. The UI loads from `unpkg.com` CDN — if that's blocked, use the raw spec instead (see below).
+
+### Raw OpenAPI Spec
 ```bash
-# Export to docs/openapi.json
+# View the raw OpenAPI 3.1 JSON in your browser:
+# http://localhost:8080/docs/api.json
+
+# Export to a file:
 docker compose run --rm app php artisan openapi:export
 
-# Export to custom path
+# Export to custom path:
 docker compose run --rm app php artisan openapi:export --path=specs/api.json
+```
+
+Paste the exported JSON into [Swagger Editor](https://editor.swagger.io/) for an alternative interactive view.
+
+### Quick Test from Terminal
+```bash
+# Login as operator
+curl -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test-operator@market.local","password":"password","device_name":"web"}'
+
+# Copy the token from the response, then:
+curl http://localhost:8080/api/v1/categories \
+  -H "Authorization: Bearer <token>"
 ```
 
 ### Postman Collection
@@ -263,6 +299,7 @@ docker compose run --rm app php artisan test --coverage
 - **EndToEndFlowTest**: Complete market flow integration
 - **CreditAccountTest** (Unit): CreditAccount value object invariants (9 read-only tests)
 - **CreditAccountMutationTest** (Feature): CreditAccount charge/repay persistence (3 tests)
+- **OperatorTestSeederTest**: Operator login, web/mobile token creation, supervisor assignment (5 tests)
 
 ## Docker Services
 
@@ -301,6 +338,9 @@ docker compose run --rm app php artisan migrate:fresh --seed --seeder=DemoSeeder
 
 # Run specific seeder
 docker compose run --rm app php artisan db:seed --class=DemoSeeder
+
+# Seed operator test data (standalone, requires no prior data)
+docker compose run --rm app php artisan db:seed --class=OperatorTestSeeder
 
 # Tinker
 docker compose run --rm app php artisan tinker
