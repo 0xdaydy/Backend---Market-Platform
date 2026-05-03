@@ -1,0 +1,98 @@
+# render.yaml — Render Blueprint for Market Platform API
+# ======================================================
+# Deploy:
+#   1. Push this repo to GitHub
+#   2. Connect repo in Render Dashboard > Blueprints
+#   3. Run: render blueprint validate && render blueprint launch
+#
+# Database note: Render provides managed Postgres, not MySQL.
+# This blueprint uses pgsql. Laravel supports Postgres natively.
+# If you must use MySQL, provision externally (PlanetScale, Aiven)
+# and override DB_CONNECTION + DB_* env vars manually.
+
+services:
+  - type: web
+    name: market-platform-api
+    runtime: docker
+    region: frankfurt
+    plan: free
+    dockerfilePath: ./Dockerfile.render
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      # --- Laravel ---
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        fromService:
+          type: web
+          name: market-platform-api
+          property: host
+      - key: APP_LOCALE
+        value: fr
+      - key: APP_FALLBACK_LOCALE
+        value: fr
+      - key: APP_FAKER_LOCALE
+        value: fr_FR
+
+      # --- Logging ---
+      - key: LOG_LEVEL
+        value: warning
+      - key: LOG_CHANNEL
+        value: stack
+      - key: LOG_STACK
+        value: single
+
+      # --- Database (Render Postgres) ---
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: market-platform-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: market-platform-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: market-platform-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: market-platform-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: market-platform-db
+          property: password
+
+      # --- Session / Cache / Queue ---
+      - key: SESSION_DRIVER
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: CACHE_STORE
+        value: database
+
+      # --- App-specific ---
+      - key: DEFAULT_CREDIT_LIMIT
+        value: "50000"
+      - key: INTEREST_RATE
+        value: "0.05"
+
+      # --- Mail ---
+      - key: MAIL_MAILER
+        value: log
+
+databases:
+  - name: market-platform-db
+    plan: free
+    databaseName: market_platform
+    user: market_platform_user
+    ipAllowList: []
+    postgresMajorVersion: 16

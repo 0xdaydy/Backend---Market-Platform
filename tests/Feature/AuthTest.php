@@ -32,7 +32,7 @@ class AuthTest extends TestCase
             ->assertJsonPath('user.role', 'operator');
     }
 
-    public function test_login_with_invalid_credentials_returns_422(): void
+    public function test_login_with_invalid_credentials_returns_401(): void
     {
         User::factory()->create([
             'email' => 'operator@example.com',
@@ -46,8 +46,8 @@ class AuthTest extends TestCase
             'device_name' => 'test-device',
         ]);
 
-        $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['email']);
+        $response->assertUnauthorized()
+            ->assertJsonPath('message', 'The provided credentials are incorrect.');
     }
 
     public function test_login_requires_email_and_password(): void
