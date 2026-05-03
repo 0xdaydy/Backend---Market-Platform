@@ -8,8 +8,6 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-
 class UserController
 {
     use AuthorizesRequests;
@@ -52,8 +50,6 @@ class UserController
             $data['supervisor_id'] = $request->user()->id;
         }
 
-        $data['password'] = Hash::make($data['password']);
-
         $user = User::create($data);
 
         return response()->json($user->load('supervisor'), 201);
@@ -65,10 +61,6 @@ class UserController
 
         if ($request->user()->isSupervisor()) {
             $data['supervisor_id'] = $request->user()->id;
-        }
-
-        if (isset($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
         }
 
         $user->update($data);

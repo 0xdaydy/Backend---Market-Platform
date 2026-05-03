@@ -26,10 +26,10 @@ class CatalogTest extends TestCase
             ->getJson('/api/v1/categories');
 
         $response->assertOk()
-            ->assertJsonCount(1)
-            ->assertJsonPath('0.id', $parent->id)
-            ->assertJsonPath('0.children.0.id', $child->id)
-            ->assertJsonPath('0.children.0.children.0.parent_id', $child->id);
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $parent->id)
+            ->assertJsonPath('data.0.children.0.id', $child->id)
+            ->assertJsonPath('data.0.children.0.children.0.parent_id', $child->id);
     }
 
     public function test_can_show_category_with_children(): void

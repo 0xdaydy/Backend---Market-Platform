@@ -17,7 +17,7 @@ class CatalogController
     {
         $roots = Category::with('children.children')->whereNull('parent_id')->get();
 
-        return response()->json($roots);
+        return response()->json(['data' => $roots]);
     }
 
     public function showCategory(Category $category): JsonResponse

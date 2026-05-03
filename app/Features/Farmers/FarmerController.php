@@ -75,9 +75,11 @@ class FarmerController
 
     public function transactions(Farmer $farmer): JsonResponse
     {
-        return response()->json([
-            'farmer_id' => $farmer->id,
-            'transactions' => [],
-        ]);
+        return response()->json(
+            $farmer->transactions()
+                ->with('items.product', 'operator')
+                ->orderBy('created_at', 'desc')
+                ->paginate(request()->input('per_page', 15))
+        );
     }
 }

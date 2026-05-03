@@ -19,4 +19,12 @@ class LoginRequest extends FormRequest
             'device_name' => ['sometimes', 'nullable', 'string'],
         ];
     }
+
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator): void
+    {
+        throw new \Illuminate\Validation\ValidationException($validator, response()->json([
+            'message' => 'The given data was invalid.',
+            'errors' => $validator->errors(),
+        ], 422));
+    }
 }

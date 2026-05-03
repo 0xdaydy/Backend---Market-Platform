@@ -213,16 +213,21 @@ class FarmerManagementTest extends TestCase
 
     // =================== TRANSACTIONS ===================
 
-    public function test_can_get_farmer_transactions_placeholder(): void
+    public function test_can_get_farmer_transactions(): void
     {
         $user = User::factory()->create(['role' => UserRole::Operator]);
         $farmer = Farmer::factory()->create();
+        $transaction = \App\Models\Transaction::factory()->create([
+            'farmer_id' => $farmer->id,
+            'operator_id' => $user->id,
+            'payment_method' => 'cash',
+        ]);
 
         $response = $this->withHeader('Authorization', 'Bearer '.$this->actingAsUser($user))
             ->getJson('/api/v1/farmers/'.$farmer->id.'/transactions');
 
         $response->assertOk()
-            ->assertJsonPath('farmer_id', $farmer->id)
-            ->assertJsonPath('transactions', []);
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $transaction->id);
     }
 }

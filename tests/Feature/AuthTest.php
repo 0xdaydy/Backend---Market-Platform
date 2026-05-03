@@ -27,7 +27,7 @@ class AuthTest extends TestCase
         ]);
 
         $response->assertOk()
-            ->assertJsonStructure(['token', 'user'])
+            ->assertJsonStructure(['token', 'access_token', 'user'])
             ->assertJsonPath('user.email', 'operator@example.com')
             ->assertJsonPath('user.role', 'operator');
     }
@@ -72,7 +72,7 @@ class AuthTest extends TestCase
         ]);
 
         $response->assertOk()
-            ->assertJsonStructure(['token', 'user'])
+            ->assertJsonStructure(['token', 'access_token', 'user'])
             ->assertJsonPath('user.email', 'operator@example.com');
     }
 

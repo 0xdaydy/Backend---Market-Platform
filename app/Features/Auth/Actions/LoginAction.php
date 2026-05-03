@@ -24,6 +24,7 @@ class LoginAction
 
         return response()->json([
             'token' => $token,
+            'access_token' => $token,
             'user' => $user->only(['id', 'name', 'email', 'role']),
         ]);
     }
