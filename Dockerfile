@@ -11,6 +11,7 @@ RUN apk add --no-cache \
     unzip \
     libzip-dev \
     mysql-client \
+    postgresql-dev \
     linux-headers \
     nginx \
     supervisor \
