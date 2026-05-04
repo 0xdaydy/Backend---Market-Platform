@@ -5,6 +5,7 @@ use App\Features\Auth\Actions\LogoutAction;
 use App\Features\Catalog\CatalogController;
 use App\Features\Farmers\FarmerController;
 use App\Features\Repayments\Actions\StoreRepaymentAction;
+use App\Features\Repayments\CommodityController;
 use App\Features\Repayments\RepaymentController;
 use App\Features\Settings\SettingController;
 use App\Features\Transactions\Actions\StoreTransactionAction;
@@ -51,6 +52,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/transactions/{transaction}', [TransactionController::class, 'show']);
         Route::post('/transactions', StoreTransactionAction::class);
         Route::post('/transactions/validate', ValidateTransactionAction::class);
+
+        Route::get('/commodities', [CommodityController::class, 'index']);
 
         Route::get('/repayments', [RepaymentController::class, 'index']);
         Route::get('/repayments/{repayment}', [RepaymentController::class, 'show']);
