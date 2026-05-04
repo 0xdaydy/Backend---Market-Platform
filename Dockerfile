@@ -32,11 +32,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 
 # Copy composer files first for Docker layer caching
+# --no-scripts avoids needing artisan before full app copy
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --no-scripts
 
 # Copy application
 COPY . .
+
+# Rebuild autoload with scripts now that artisan is available
+RUN composer dump-autoload --no-dev --optimize --no-interaction
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
