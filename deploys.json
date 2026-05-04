@@ -1,0 +1,114 @@
+[
+  {
+    "commit": {
+      "createdAt": "2026-05-04T02:32:14Z",
+      "id": "f0a20f4d58077ebe12933def0613aba2b81e3334",
+      "message": "fix: replace fromDatabase refs with explicit connection values"
+    },
+    "createdAt": "2026-05-04T02:52:28.070352Z",
+    "finishedAt": "2026-05-04T02:54:10.753858Z",
+    "id": "dep-d7s0jqrt6lks73fvujs0",
+    "startedAt": "2026-05-04T02:52:28.013866Z",
+    "status": "update_failed",
+    "trigger": "api",
+    "updatedAt": "2026-05-04T02:54:10.754382Z"
+  },
+  {
+    "commit": {
+      "createdAt": "2026-05-04T02:32:14Z",
+      "id": "f0a20f4d58077ebe12933def0613aba2b81e3334",
+      "message": "fix: replace fromDatabase refs with explicit connection values"
+    },
+    "createdAt": "2026-05-04T02:45:59.205466Z",
+    "finishedAt": "2026-05-04T02:49:34.434063Z",
+    "id": "dep-d7s0gpvlk1mc73deeg2g",
+    "startedAt": "2026-05-04T02:45:59.141062Z",
+    "status": "live",
+    "trigger": "api",
+    "updatedAt": "2026-05-04T02:54:11.711808Z"
+  },
+  {
+    "commit": {
+      "createdAt": "2026-05-04T02:32:14Z",
+      "id": "f0a20f4d58077ebe12933def0613aba2b81e3334",
+      "message": "fix: replace fromDatabase refs with explicit connection values"
+    },
+    "createdAt": "2026-05-04T02:38:52.465253Z",
+    "finishedAt": "2026-05-04T02:40:09.009786Z",
+    "id": "dep-d7s0df77f7vs73dabv80",
+    "startedAt": "2026-05-04T02:38:52.461281Z",
+    "status": "deactivated",
+    "trigger": "api",
+    "updatedAt": "2026-05-04T02:49:34.433246Z"
+  },
+  {
+    "commit": {
+      "createdAt": "2026-05-04T02:32:14Z",
+      "id": "f0a20f4d58077ebe12933def0613aba2b81e3334",
+      "message": "fix: replace fromDatabase refs with explicit connection values"
+    },
+    "createdAt": "2026-05-04T02:32:28.825402Z",
+    "finishedAt": "2026-05-04T02:33:42.095198Z",
+    "id": "dep-d7s0af77f7vs73daaerg",
+    "startedAt": "2026-05-04T02:32:28.820953Z",
+    "status": "update_failed",
+    "trigger": "api",
+    "updatedAt": "2026-05-04T02:33:42.095681Z"
+  },
+  {
+    "commit": {
+      "createdAt": "2026-05-04T02:21:46Z",
+      "id": "f7e3176b37b1b07afbf7b60070046b1bd04a7af4",
+      "message": "fix: add --no-scripts to composer install for layer-cached build"
+    },
+    "createdAt": "2026-05-04T02:21:56.053864Z",
+    "finishedAt": "2026-05-04T02:24:32.286744Z",
+    "id": "dep-d7s05h6gkk3c738tqt1g",
+    "startedAt": "2026-05-04T02:21:56.049068Z",
+    "status": "update_failed",
+    "trigger": "api",
+    "updatedAt": "2026-05-04T02:24:32.287197Z"
+  },
+  {
+    "commit": {
+      "createdAt": "2026-05-04T02:17:57Z",
+      "id": "e168fc7595d44bfad8e3de9555f96b7ff01de6b4",
+      "message": "fix: add postgresql-dev dependency for pdo_pgsql build"
+    },
+    "createdAt": "2026-05-04T02:18:09.028769Z",
+    "finishedAt": "2026-05-04T02:19:55.89537Z",
+    "id": "dep-d7s03obt6lks73fvqo60",
+    "startedAt": "2026-05-04T02:18:09.02198Z",
+    "status": "build_failed",
+    "trigger": "api",
+    "updatedAt": "2026-05-04T02:19:55.896027Z"
+  },
+  {
+    "commit": {
+      "createdAt": "2026-05-04T02:12:16Z",
+      "id": "8dfe5b421d3d5a21e5b457655393df8bd3617293",
+      "message": "fix: replace Dockerfile with Render-compatible version (Nginx + Supervisor + Postgres)"
+    },
+    "createdAt": "2026-05-04T02:12:43.604067Z",
+    "finishedAt": "2026-05-04T02:14:03.951123Z",
+    "id": "dep-d7s016reo5us73dhqab0",
+    "startedAt": "2026-05-04T02:12:43.598647Z",
+    "status": "build_failed",
+    "trigger": "api",
+    "updatedAt": "2026-05-04T02:14:03.951614Z"
+  },
+  {
+    "commit": {
+      "createdAt": "2026-05-04T00:57:03Z",
+      "id": "9b8c8d07b330000fafa9c453191faf2b816a6d6c",
+      "message": "feat: add commodity controller to fetch active rates and register api route"
+    },
+    "createdAt": "2026-05-04T01:11:42.962665Z",
+    "finishedAt": "2026-05-04T01:28:42.264362Z",
+    "id": "dep-d7rv4jnlk1mc73ddpigg",
+    "startedAt": "2026-05-04T01:11:42.956276Z",
+    "status": "update_failed",
+    "trigger": "manual",
+    "updatedAt": "2026-05-04T01:28:42.264836Z"
+  }
+]
