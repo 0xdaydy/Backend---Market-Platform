@@ -44,17 +44,18 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         // Log all exceptions with request context
-        $exceptions->report(function (Throwable $e, Request $request) {
+        $exceptions->report(function (Throwable $e) {
             if ($e instanceof AuthenticationException || $e instanceof AuthorizationException) {
                 return;
             }
+            $request = request();
             Log::error($e->getMessage(), [
                 'exception' => get_class($e),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
-                'url' => $request->fullUrl(),
-                'method' => $request->method(),
-                'ip' => $request->ip(),
+                'url' => $request?->fullUrl(),
+                'method' => $request?->method(),
+                'ip' => $request?->ip(),
             ]);
         });
     })->create();
