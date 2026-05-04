@@ -1,6 +1,6 @@
-FROM php:8.3-fpm-alpine
+FROM php:8.3-fpm-alpine AS base
 
-# Install system dependencies
+# System dependencies
 RUN apk add --no-cache \
     git \
     curl \
@@ -12,23 +12,42 @@ RUN apk add --no-cache \
     libzip-dev \
     mysql-client \
     linux-headers \
+    nginx \
+    supervisor \
     $PHPIZE_DEPS \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+    && docker-php-ext-install -j$(nproc) \
+    pdo_mysql \
+    pdo_pgsql \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    gd \
+    zip
 
-# Install Composer
+# Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
 WORKDIR /var/www
 
-# Copy existing application directory contents
-COPY . /var/www
+# Copy composer files first for Docker layer caching
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
-# Copy existing application directory permissions
-COPY --chown=www-data:www-data . /var/www
+# Copy application
+COPY . .
 
-# Change current user to www-data
-USER www-data
+# Set permissions
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache \
+    && chmod +x /var/www/docker-start.sh
 
-EXPOSE 9000
-CMD ["php-fpm"]
+# Nginx config
+COPY nginx/render.conf /etc/nginx/http.d/default.conf
+
+# Supervisor config — Alpine path
+COPY supervisord.conf /etc/supervisord.conf
+
+EXPOSE 10000
+
+CMD ["/var/www/docker-start.sh"]
