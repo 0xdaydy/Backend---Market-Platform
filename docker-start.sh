@@ -30,6 +30,11 @@ php artisan event:cache || echo "WARNING: event:cache failed"
 echo "Running migrations..."
 php artisan migrate --force || echo "WARNING: migrate failed"
 
+# Fix permissions after artisan commands (they run as root)
+echo "Fixing permissions..."
+chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
 # Start supervisord (runs Nginx + PHP-FPM + queue worker)
 echo "Starting supervisord..."
 exec /usr/bin/supervisord -c /etc/supervisord.conf
