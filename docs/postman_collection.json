@@ -10,6 +10,21 @@
             "item": [
                 {
                     "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "var token = jsonData.token || jsonData.access_token || null;",
+                                    "if (token) {",
+                                    "    pm.collectionVariables.set('token', token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
                     "request": {
                         "method": "POST",
                         "header": [{"key": "Content-Type", "value": "application/json"}],
@@ -73,6 +88,14 @@
                     }
                 },
                 {
+                    "name": "Show Farmer",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": "{{base_url}}/api/v1/farmers/1"
+                    }
+                },
+                {
                     "name": "Create Farmer",
                     "request": {
                         "method": "POST",
@@ -85,6 +108,45 @@
                             "mode": "raw",
                             "raw": "{\n  \"name\": \"Moussa Traore\",\n  \"card_id\": \"FARM-001\",\n  \"phone\": \"+22370000001\",\n  \"credit_limit\": 50000\n}"
                         }
+                    }
+                },
+                {
+                    "name": "Update Farmer",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {"key": "Authorization", "value": "Bearer {{token}}"},
+                            {"key": "Content-Type", "value": "application/json"}
+                        ],
+                        "url": "{{base_url}}/api/v1/farmers/1",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Updated Name\",\n  \"credit_limit\": 75000\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Farmer",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": "{{base_url}}/api/v1/farmers/1"
+                    }
+                },
+                {
+                    "name": "Farmer Debts",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": "{{base_url}}/api/v1/farmers/1/debts"
+                    }
+                },
+                {
+                    "name": "Farmer Transactions",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": "{{base_url}}/api/v1/farmers/1/transactions"
                     }
                 }
             ]
@@ -101,11 +163,50 @@
                     }
                 },
                 {
+                    "name": "Show Category",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": "{{base_url}}/api/v1/categories/1"
+                    }
+                },
+                {
+                    "name": "Create Category",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {"key": "Authorization", "value": "Bearer {{token}}"},
+                            {"key": "Content-Type", "value": "application/json"}
+                        ],
+                        "url": "{{base_url}}/api/v1/categories",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Fruits\"\n}"
+                        }
+                    }
+                },
+                {
                     "name": "List Products",
                     "request": {
                         "method": "GET",
                         "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
                         "url": "{{base_url}}/api/v1/products"
+                    }
+                },
+                {
+                    "name": "Show Product",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": "{{base_url}}/api/v1/products/1"
+                    }
+                },
+                {
+                    "name": "Category Products",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": "{{base_url}}/api/v1/categories/1/products"
                     }
                 }
             ]
@@ -113,6 +214,22 @@
         {
             "name": "Transactions",
             "item": [
+                {
+                    "name": "List Transactions",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": "{{base_url}}/api/v1/transactions"
+                    }
+                },
+                {
+                    "name": "Show Transaction",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": "{{base_url}}/api/v1/transactions/1"
+                    }
+                },
                 {
                     "name": "Create Cash Transaction",
                     "request": {
@@ -148,6 +265,14 @@
         {
             "name": "Repayments",
             "item": [
+                {
+                    "name": "List Repayments",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": "{{base_url}}/api/v1/repayments"
+                    }
+                },
                 {
                     "name": "Create Repayment",
                     "request": {
