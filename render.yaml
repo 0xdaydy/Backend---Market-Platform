@@ -16,7 +16,7 @@ services:
     runtime: docker
     region: frankfurt
     plan: free
-    dockerfilePath: ./Dockerfile.render
+    dockerfilePath: ./Dockerfile
     healthCheckPath: /
     autoDeploy: true
     envVars:
@@ -51,25 +51,15 @@ services:
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
-        fromDatabase:
-          name: market-platform-db
-          property: host
+        value: dpg-d7s083ho3t8c73dg5pvg-a.oregon-postgres.render.com
       - key: DB_PORT
-        fromDatabase:
-          name: market-platform-db
-          property: port
+        value: "5432"
       - key: DB_DATABASE
-        fromDatabase:
-          name: market-platform-db
-          property: database
+        value: market_platform
       - key: DB_USERNAME
-        fromDatabase:
-          name: market-platform-db
-          property: user
+        value: market_platform_user
       - key: DB_PASSWORD
-        fromDatabase:
-          name: market-platform-db
-          property: password
+        value: tsLGJulADBTi9BURYJdGiVf5sKJNWKSy
 
       # --- Session / Cache / Queue ---
       - key: SESSION_DRIVER
@@ -89,10 +79,5 @@ services:
       - key: MAIL_MAILER
         value: log
 
-databases:
-  - name: market-platform-db
-    plan: free
-    databaseName: market_platform
-    user: market_platform_user
-    ipAllowList: []
-    postgresMajorVersion: 16
+# Database provisioned via API: dpg-d7s083ho3t8c73dg5pvg-a (oregon, free tier)
+# Connection details set as explicit env vars above
